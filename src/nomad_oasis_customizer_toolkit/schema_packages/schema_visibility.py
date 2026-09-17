@@ -38,13 +38,11 @@ def _entry_data_classes():
         yield cls
 
 
-def _gui_label(section) -> str:
-    # Same fallback order as gui/src/components/uploads/CreateEntry.js
+def _schema_label(section) -> str | None:
     annotation = section.m_annotations.get('schema')
     if isinstance(annotation, list):
         annotation = annotation[0] if annotation else None
-    label = getattr(annotation, 'label', None)
-    return label or section.label or section.name
+    return getattr(annotation, 'label', None)
 
 
 def hide_schemas_not_in(allowed_schemas: list[str], own_entry_point_id: str) -> None:
@@ -58,9 +56,17 @@ def hide_schemas_not_in(allowed_schemas: list[str], own_entry_point_id: str) -> 
     allowed = set(allowed_schemas)
     for cls in _entry_data_classes():
         section = cls.m_def
-        label = _gui_label(section)
-        if label in allowed or section.qualified_name() in allowed:
+        # The old GUI shows the schema annotation label first, the new GUI (v2) the
+        # section label first, so an allowlist item may use either.
+        names = {
+            _schema_label(section),
+            section.label,
+            section.name,
+            section.qualified_name(),
+        }
+        if names & allowed:
             continue
+        label = _schema_label(section) or section.label or section.name
         section.m_annotations['schema'] = SchemaAnnotation(label=label, enabled=False)
 
 
