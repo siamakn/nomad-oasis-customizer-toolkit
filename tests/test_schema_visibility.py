@@ -1,4 +1,7 @@
+from nomad.datamodel.data import EntryData
+from nomad.datamodel.metainfo.annotations import SchemaAnnotation
 from nomad.datamodel.metainfo.eln import BasicEln, ELNInstrument, ELNSample
+from nomad.metainfo import Section
 
 from nomad_oasis_customizer_toolkit.schema_packages.schema_visibility import (
     hide_schemas_not_in,
@@ -24,3 +27,21 @@ def test_only_allowlisted_schemas_stay_enabled():
     assert is_enabled(ELNSample.m_def)  # matched by qualified name
     assert not is_enabled(ELNInstrument.m_def)
     assert ELNInstrument.m_def.m_annotations['schema'].label == 'Instrument ELN'
+
+
+def test_either_gui_label_matches():
+    # Defined here so that the other test's allowlist has not hidden them already.
+    class TwoLabels(EntryData):
+        m_def = Section(
+            label='New GUI label', a_schema=SchemaAnnotation(label='Old GUI label')
+        )
+
+    class OtherTwoLabels(EntryData):
+        m_def = Section(label='Other new', a_schema=SchemaAnnotation(label='Other old'))
+
+    hide_schemas_not_in(
+        ['New GUI label', 'Other old'], own_entry_point_id=ENTRY_POINT_ID
+    )
+
+    assert is_enabled(TwoLabels.m_def)
+    assert is_enabled(OtherTwoLabels.m_def)

@@ -6,7 +6,8 @@ is configured.
 
 ## Schema visibility
 
-Limits the **built-in schema** dropdown of the *Create new entry* dialog to an allowlist.
+Limits the schemas offered for creating new entries to an allowlist, in both the classic
+GUI (*Create new entry* dialog) and the new GUI (v2).
 
 ### Why not `plugins.entry_points.exclude`
 
@@ -38,6 +39,7 @@ plugins:
           - FAIRmat PI Onboarding
 ```
 
-Each item is matched against the label shown in the dropdown or the qualified section
-name (e.g. `nomad.datamodel.metainfo.eln.ELNSample`). Without `allowed_schemas` nothing is
+Each item is matched against the schema's labels (as shown in the classic GUI or the new
+GUI v2), its name, or its qualified section name
+(e.g. `nomad.datamodel.metainfo.eln.ELNSample`). Without `allowed_schemas` nothing is
 hidden. Restart the app after changing the list.
