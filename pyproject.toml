@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "setuptools-scm>=8.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+classifiers = [
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+]
+name = "nomad-oasis-customizer-toolkit"
+description = "Toolkit of NOMAD plugins for customizing an Oasis through nomad.yaml, without changing NOMAD or its GUI."
+version = "0.1.0"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+authors = [
+    { name = "Siamak Nakhaie", email = "siamak.nakhaie@physik.hu-berlin.de" },
+]
+dependencies = [
+    "nomad-lab>=1.4.1",
+]
+
+[project.urls]
+Repository = "https://github.com/siamakn/nomad-oasis-customizer-toolkit"
+
+[project.optional-dependencies]
+dev = ["ruff", "pytest", "structlog"]
+
+[tool.uv]
+extra-index-url = [
+  "https://gitlab.mpcdf.mpg.de/api/v4/projects/2187/packages/pypi/simple",
+]
+
+[tool.ruff]
+line-length = 88
+indent-width = 4
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.entry-points.'nomad.plugin']
+schema_visibility = "nomad_oasis_customizer_toolkit.schema_packages:schema_visibility"
